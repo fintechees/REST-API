@@ -1,0 +1,304 @@
+1. sign up
+
+let formData = {
+  "brokerName": xxxxx,
+  "user_email": xxxxx,
+  "refAccountId": xxxxx(IB account id)
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/quickRegister`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+----------------------------------------------------------------------------------
+2. verify email
+
+let formData = {
+  "brokerName": xxxxx,
+  "user_email": xxxxx,
+  "resetPwToken": xxxxx(check your email to get the verification token)
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/resetPassword`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+3. login(this will retrieve web-trader token)
+
+let formData = {
+  "brokerName": xxxxx,
+  "accountId": xxxxx,
+  "password": xxxxx
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/signinToTrade`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+4. get dashboard token
+
+let formData = {
+  "brokerName": xxxxx,
+  "accountId": xxxxx,
+  "tradeToken": xxxxx(this is web-trader token that can be retrieved by calling signinToTrade)
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/gTT`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+5. get broker profile
+
+let formData = {
+  "brokerName": xxxxx
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/getSS`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+6. propose copytrading
+
+let formData = {
+  "brokerName": xxxxx,
+  "accountId": xxxxx,
+  "tradeToken": xxxxx(dashboard token),
+  "reqAccountId": xxxxx(if level == 0 || level == 1, copytrading hub id. if others, whom to copy),
+  "aBook": true or false(if reverse mode, then true),
+  "level": 0 or 1 or 2 or 3(0 stands for "Lots", 1:"Multiplier", 2:"LAMM", 3:"PAMM"},
+  "funds": xxxxx(multiplier),
+  "comment": ((level == 0 || level == 1) ? (brokerId + ":" + accountId) : null)
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/pCT`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {
+    if (res.res == "success") {
+    }
+  })
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+7. approve copytrading
+
+let formData = {
+  "brokerName": xxxxx,
+  "accountId": xxxxx,
+  "tradeToken": xxxxx(dashboard token),
+  "reqAccountId": xxxxx(whom to approve),
+  "comment": null
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/aCT`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {
+    if (res.res == "success") {
+    }
+  })
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+8. cancel copytrading(remove from the follower side)
+
+let formData = {
+  "brokerName": xxxxx,
+  "accountId": xxxxx,
+  "tradeToken": xxxxx(dashboard token),
+  "reqAccountId": xxxxx(if level == 0 || level == 1, copytrading hub id. if others, whom to copy),
+  "comment": ((level == 0 || level == 1) ? (brokerId + ":" + accountId) : null)
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/dCTI`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {
+    if (res.res == "success") {
+    }
+  })
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+9. reject copytrading(remove from the pro side)
+
+let formData = {
+  "brokerName": xxxxx,
+  "accountId": xxxxx,
+  "tradeToken": xxxxx(dashboard token),
+  "reqAccountId": xxxxx(who is copying),
+  "comment": null
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/dCTE`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {
+    if (res.res == "success") {
+    }
+  })
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+10. retrieve copytrading list(pro list)
+
+let proList = xxxxx(contact us to get your specific pro list url);
+
+fetch(proList)
+.then(response => response.json())
+.then(data => {
+  let sortedData = data.sort((a, b) => {
+    return parseFloat(b.pl) - parseFloat(a.pl);
+  })
+  for (let i in sortedData) {
+    let account = sortedData[i];
+  }
+});
+
+
+----------------------------------------------------------------------------------
+11. market order to open trade
+
+let formData = {
+  "units": 0.01,
+  "instrument": "EUR/USD",
+  "type": "MARKET",
+  "price": 0
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/accounts/${accountId}/orders`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer TRADE " + xxxxx(webtrader token)
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+12. market order to close trade
+
+let formData = {
+  "units": "ALL",
+  "price": 0,
+  "slippage": 0
+};
+
+$.ajax({
+    type: "PUT",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/accounts/${accountId}/trades/${tradeId}/close`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer TRADE " + xxxxx(webtrader token)
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+13. get account info(including all the open trades)
+
+$.ajax({
+    type: "GET",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/accounts/${accountId}`,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer TRADE " + xxxxx(webtrader token)
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
+
+----------------------------------------------------------------------------------
+14. pg(deposit)
+
+let formData = {
+  "id": xxxxx(payment id),
+  "broker_id": xxxxx
+};
+
+$.ajax({
+    type: "POST",
+    url: `${window.myConfig.brokerProtocol}${window.myConfig.brokerDomain}${window.myConfig.brokerPort}/dp2`,
+    data: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .done(function(res) {})
+  .fail(function(data) {});
+
